@@ -1,26 +1,410 @@
+/* app/globals.css - Tailwind v4 */
 @import "tailwindcss";
 
+/* Theme Customization for Tailwind v4 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Custom Colors */
+  --color-primary: #3b82f6;
+  --color-secondary: #8b5cf6;
+  --color-accent: #ec4899;
+  
+  /* Custom Animations */
+  --animate-shine: shine 2s ease-in-out;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 3s ease-in-out infinite;
+  
+  /* Custom Font Families */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2563eb, #7c3aed);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Selection Style */
+  ::selection {
+    background-color: rgba(59, 130, 246, 0.3);
+    color: white;
+  }
+
+  /* Focus Visible */
+  *:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  /* Smooth Image Loading */
+  img {
+    image-rendering: -webkit-optimize-contrast;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================
+   CUSTOM ANIMATIONS
+   ============================================ */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+@layer utilities {
+  /* Animation Classes */
+  .animate-shine {
+    animation: shine 2s ease-in-out;
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .animate-scaleIn {
+    animation: scaleIn 0.4s ease-out;
+  }
+
+  .animate-slideInRight {
+    animation: slideInRight 0.5s ease-out;
+  }
+
+  .animate-slideInLeft {
+    animation: slideInLeft 0.5s ease-out;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Glassmorphism Effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gradient-text-blue-purple {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Text Shadow Glow */
+  .text-glow {
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                 0 0 40px rgba(139, 92, 246, 0.3);
+  }
+
+  .text-glow-strong {
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.8),
+                 0 0 60px rgba(139, 92, 246, 0.5);
+  }
+
+  /* Gradient Border */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(#1e293b, #1e293b) padding-box,
+                linear-gradient(135deg, #667eea, #764ba2) border-box;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+  }
+
+  /* Shadow Effects */
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
+                0 10px 40px rgba(59, 130, 246, 0.2);
+  }
+
+  .shadow-glow-strong {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.5),
+                0 20px 60px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Backdrop Blur Variations */
+  .backdrop-blur-light {
+    backdrop-filter: blur(5px);
+  }
+
+  .backdrop-blur-medium {
+    backdrop-filter: blur(15px);
+  }
+
+  .backdrop-blur-heavy {
+    backdrop-filter: blur(30px);
+  }
+}
+
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
+@layer components {
+  /* Button Primary */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold;
+    @apply hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105;
+    @apply active:scale-95;
+  }
+
+  /* Button Secondary */
+  .btn-secondary {
+    @apply px-6 py-3 backdrop-blur-sm bg-white/10 text-white rounded-xl font-semibold;
+    @apply border border-white/20 hover:bg-white/20 transition-all duration-300;
+    @apply active:scale-95;
+  }
+
+  /* Button Outline */
+  .btn-outline {
+    @apply px-6 py-3 bg-transparent text-white rounded-xl font-semibold;
+    @apply border-2 border-white/30 hover:border-blue-500 hover:bg-blue-500/10;
+    @apply transition-all duration-300;
+  }
+
+  /* Input Field */
+  .input-field {
+    @apply w-full px-4 py-3 bg-slate-900/50 text-white rounded-xl;
+    @apply border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+    @apply outline-none transition-all placeholder:text-slate-500;
+  }
+
+  /* Card Base */
+  .card {
+    @apply backdrop-blur-sm bg-white/5 rounded-2xl border border-white/10;
+    @apply transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20;
+    @apply hover:border-blue-500/50;
+  }
+
+  /* Badge */
+  .badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+    @apply backdrop-blur-sm border;
+  }
+
+  .badge-primary {
+    @apply badge bg-blue-600/90 text-white border-blue-400/30;
+  }
+
+  .badge-success {
+    @apply badge bg-green-600/90 text-white border-green-400/30;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-600/90 text-white border-yellow-400/30;
+  }
+
+  /* Loading Spinner */
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(59, 130, 246, 0.1);
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .spinner-sm {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
+  /* Section Container */
+  .section {
+    @apply container mx-auto px-4 py-20;
+  }
+
+  /* Gradient Background */
+  .bg-gradient-dark {
+    @apply bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900;
+  }
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (Future)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  /* Already dark by default */
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+@media (prefers-contrast: high) {
+  .card,
+  .glass {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    border: 2px solid currentColor;
+  }
 }
