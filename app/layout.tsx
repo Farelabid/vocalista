@@ -1,6 +1,7 @@
-// app/layout.tsx - Clean Root Layout
+// app/layout.tsx - Fixed with ToastProvider
 import type { Metadata } from "next";
 import "./globals.css";
+import { ToastProvider } from "@/components/Toast";
 
 export const metadata: Metadata = {
   title: "Radio Online Academy - Belajar Membangun Radio Online Profesional",
@@ -26,7 +27,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased">
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );

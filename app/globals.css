@@ -1,4 +1,4 @@
-/* Premium Design System - Tailwind v4 */
+/* Premium Design System - Tailwind v4 + Enhanced Animations */
 @import "tailwindcss";
 
 /* ============================================
@@ -51,10 +51,11 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
-  /* Transitions */
+  /* Transitions - Smooth easing */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* ============================================
@@ -68,12 +69,14 @@
 html {
   scroll-behavior: smooth;
   font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
 body {
   font-family: var(--font-sans);
   background: #FAFAFA;
   color: var(--color-neutral-900);
+  overflow-x: hidden;
 }
 
 /* Better focus states */
@@ -139,7 +142,7 @@ body {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -150,7 +153,7 @@ body {
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-30px);
   }
   to {
     opacity: 1;
@@ -161,7 +164,18 @@ body {
 @keyframes slideRight {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
   }
   to {
     opacity: 1;
@@ -172,7 +186,7 @@ body {
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
@@ -195,33 +209,103 @@ body {
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Animation Classes */
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-slide-up {
-  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-slide-down {
-  animation: slideDown 0.4s ease-out;
+  animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-slide-right {
-  animation: slideRight 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideRight 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Staggered animations */
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* ============================================
+   LOADING SKELETON
+   ============================================ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-200) 25%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.skeleton-text:last-child {
+  width: 80%;
+}
 
 /* ============================================
    GLASS MORPHISM - Subtle
@@ -257,16 +341,65 @@ body {
 /* Button hover effect */
 .btn-hover-lift {
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  will-change: transform;
 }
 
 .btn-hover-lift:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
 
 .btn-hover-lift:active {
   transform: translateY(0);
   box-shadow: var(--shadow-sm);
+}
+
+/* Touch-friendly buttons */
+@media (hover: none) and (pointer: coarse) {
+  .btn-hover-lift:hover {
+    transform: none;
+  }
+  
+  .btn-hover-lift:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Active state for touch */
+.active\:scale-98:active {
+  transform: scale(0.98);
+}
+
+.active\:scale-95:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   NAVBAR & MOBILE MENU
+   ============================================ */
+nav {
+  will-change: background-color, box-shadow;
+}
+
+/* Mobile Menu Slide Animation */
+.mobile-menu-enter {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+/* Navbar Underline Effect */
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
 }
 
 /* ============================================
@@ -345,6 +478,39 @@ body {
 }
 
 /* ============================================
+   FORM ELEMENTS - Enhanced
+   ============================================ */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea {
+  transition: all var(--transition-base);
+}
+
+input:focus,
+textarea:focus {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Input with icon */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon input {
+  padding-left: 2.5rem;
+}
+
+.input-with-icon svg {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ============================================
    UTILITIES
    ============================================ */
 .text-balance {
@@ -367,24 +533,59 @@ img {
   display: block;
 }
 
-/* Smooth transitions for dark mode */
-* {
-  transition-property: color, background-color, border-color;
-  transition-duration: var(--transition-base);
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* Prevent layout shift */
+.aspect-video {
+  aspect-ratio: 16 / 9;
 }
 
-/* Remove transitions from animations */
-.animate-fade-in *,
-.animate-slide-up *,
-.animate-slide-down *,
-.animate-slide-right *,
-.animate-scale-in * {
-  transition: none;
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Safe area for mobile */
+@supports (padding: max(0px)) {
+  .safe-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+  
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
 }
 
 /* ============================================
-   RESPONSIVE UTILITIES
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+@media (max-width: 768px) {
+  :root {
+    --spacing-unit: 4px;
+  }
+  
+  /* Larger tap targets */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Reduce motion on mobile to save battery */
+  .animate-slide-up,
+  .animate-slide-down,
+  .animate-slide-right,
+  .animate-slide-left {
+    animation-duration: 0.4s;
+  }
+}
+
+/* ============================================
+   DARK MODE PREPARATION
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  /* Keep light mode for now, but structure ready */
+}
+
+/* ============================================
+   ACCESSIBILITY & REDUCED MOTION
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -393,12 +594,14 @@ img {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-@media (max-width: 768px) {
-  :root {
-    --spacing-unit: 4px;
+/* Focus visible for keyboard navigation */
+@media (prefers-reduced-motion: no-preference) {
+  :focus-visible {
+    transition: outline-offset 0.2s ease;
   }
 }
 
@@ -414,4 +617,34 @@ img {
     background: white !important;
     color: black !important;
   }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR FOR BETTER UX
+   ============================================ */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-300) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
 }
