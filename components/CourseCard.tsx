@@ -1,4 +1,4 @@
-// components/CourseCard.tsx - Enhanced with Loading States & Better Animations
+// components/CourseCard.tsx - Fixed dengan font yang lebih ringan
 'use client';
 
 import Link from 'next/link';
@@ -11,7 +11,6 @@ interface CourseCardProps {
   loading?: boolean;
 }
 
-// Loading Skeleton Component
 export function CourseCardSkeleton() {
   return (
     <div className="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
@@ -92,7 +91,7 @@ export default function CourseCard({ course, loading = false }: CourseCardProps)
           {/* Category Badge */}
           {course.category && (
             <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-white/95 backdrop-blur-sm text-neutral-900 text-xs font-semibold rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-white/95 backdrop-blur-sm text-neutral-900 text-xs font-medium rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
@@ -138,7 +137,7 @@ export default function CourseCard({ course, loading = false }: CourseCardProps)
               </div>
             </div>
             
-            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-blue-600 group-hover:text-blue-700 transition-colors">
               <span className="hidden sm:inline">Lihat Detail</span>
               <span className="sm:hidden">Detail</span>
               <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

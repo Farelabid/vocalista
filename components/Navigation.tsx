@@ -132,7 +132,7 @@ export default function Navigation({ currentPage = 'home' }: NavigationProps) {
             <div className="p-6 space-y-3">
               {/* Menu Header */}
               <div className="mb-4">
-                <h3 className="text-lg font-black text-neutral-900 mb-1">Menu Navigasi</h3>
+                <h3 className="text-lg font-bold text-neutral-900 mb-1">Menu Navigasi</h3>
                 <p className="text-xs text-neutral-600">Jelajahi Radio Online Academy</p>
               </div>
 
@@ -200,7 +200,7 @@ export default function Navigation({ currentPage = 'home' }: NavigationProps) {
                 <Link
                   href="/courses"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="group relative flex items-center justify-center gap-3 w-full px-6 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-black rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transition-all overflow-hidden"
+                  className="group relative flex items-center justify-center gap-3 w-full px-6 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-bold rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transition-all overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:2rem_2rem]"></div>
                   <svg className="w-6 h-6 relative z-10 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,19 +220,19 @@ export default function Navigation({ currentPage = 'home' }: NavigationProps) {
                 <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-wider px-2">Kenapa Pilih Kami</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg">
-                    <div className="text-3xl font-black text-white mb-1">1,200+</div>
+                    <div className="text-3xl font-bold text-white mb-1">1,200+</div>
                     <div className="text-xs font-bold text-blue-100">Students Aktif</div>
                   </div>
                   <div className="p-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg">
-                    <div className="text-3xl font-black text-white mb-1">4.9</div>
+                    <div className="text-3xl font-bold text-white mb-1">4.9</div>
                     <div className="text-xs font-bold text-green-100">Rating Bintang 5</div>
                   </div>
                   <div className="p-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg">
-                    <div className="text-3xl font-black text-white mb-1">500+</div>
+                    <div className="text-3xl font-bold text-white mb-1">500+</div>
                     <div className="text-xs font-bold text-purple-100">Radio Aktif</div>
                   </div>
                   <div className="p-4 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl shadow-lg">
-                    <div className="text-3xl font-black text-white mb-1">24/7</div>
+                    <div className="text-3xl font-bold text-white mb-1">24/7</div>
                     <div className="text-xs font-bold text-yellow-100">Support Online</div>
                   </div>
                 </div>

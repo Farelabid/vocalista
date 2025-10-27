@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Navigation from '@/components/Navigation';
 
 export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
@@ -165,110 +166,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50">
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-neutral-200/50' 
-          : 'bg-white/90 backdrop-blur-xl border-b border-neutral-200/50'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                <div className={`relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 ${
-                  scrolled ? 'shadow-blue-500/30' : 'shadow-blue-500/20'
-                } group-hover:shadow-blue-500/40 group-hover:scale-110`}>
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                  </svg>
-                </div>
-              </div>
-              <span className="text-base sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight">
-                <span className="hidden sm:inline">Radio Online Academy</span>
-                <span className="sm:hidden">ROA</span>
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
-              <a href="#features" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
-                Features
-              </a>
-              <a href="#how-it-works" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
-                How It Works
-              </a>
-              <Link 
-                href="/courses"
-                className="px-5 py-2.5 text-sm font-semibold text-white bg-neutral-900 rounded-lg hover:bg-neutral-800 transition-all btn-hover-lift"
-              >
-                Lihat Courses
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden relative w-10 h-10 flex items-center justify-center text-neutral-600 hover:text-neutral-900 transition-colors"
-              aria-label="Toggle menu"
-            >
-              <div className="w-5 h-4 flex flex-col justify-between">
-                <span className={`w-full h-0.5 bg-current transition-all duration-300 ${
-                  mobileMenuOpen ? 'rotate-45 translate-y-[7px]' : ''
-                }`}></span>
-                <span className={`w-full h-0.5 bg-current transition-all duration-300 ${
-                  mobileMenuOpen ? 'opacity-0' : ''
-                }`}></span>
-                <span className={`w-full h-0.5 bg-current transition-all duration-300 ${
-                  mobileMenuOpen ? '-rotate-45 -translate-y-[7px]' : ''
-                }`}></span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-xl border-b border-neutral-200 shadow-xl transition-all duration-300 ${
-          mobileMenuOpen 
-            ? 'opacity-100 translate-y-0 pointer-events-auto' 
-            : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}>
-          <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
-            <a 
-              href="#features"
-              onClick={closeMobileMenu}
-              className="block py-3 px-4 text-base font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 rounded-lg transition-all"
-            >
-              Features
-            </a>
-            <a 
-              href="#how-it-works"
-              onClick={closeMobileMenu}
-              className="block py-3 px-4 text-base font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 rounded-lg transition-all"
-            >
-              How It Works
-            </a>
-            <div className="pt-2">
-              <Link 
-                href="/courses"
-                onClick={closeMobileMenu}
-                className="block py-3 px-4 text-base font-semibold text-white bg-neutral-900 rounded-lg hover:bg-neutral-800 transition-all text-center"
-              >
-                Lihat Courses
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        {mobileMenuOpen && (
-          <div 
-            className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm -z-10"
-            onClick={closeMobileMenu}
-          ></div>
-        )}
-      </nav>
+    {/* Navigation */}
+      <Navigation currentPage="home" />
 
       {/* Hero Section */}
       <section ref={heroRef} className="pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
