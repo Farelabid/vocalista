@@ -203,11 +203,11 @@ export default function CourseDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50 flex items-center justify-center p-4 sm:p-6">
         <div className="text-center space-y-6 animate-scale-in max-w-md">
           <div className="text-6xl sm:text-8xl mb-4" aria-hidden="true">😕</div>
-          <h2 className="text-3xl sm:text-4xl font-black text-neutral-900 mb-3">Course Tidak Ditemukan</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 mb-3">Course Tidak Ditemukan</h2>
           <p className="text-base sm:text-lg text-neutral-600">Course yang kamu cari tidak tersedia.</p>
           <Link
             href="/courses"
-            className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-black rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
+            className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-extrabold rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -244,7 +244,7 @@ export default function CourseDetailPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6 sm:p-8">
                     <div className="text-white">
                       <div className="text-xs font-bold uppercase tracking-wider mb-2">Preview</div>
-                      <div className="text-xl sm:text-2xl font-black">Play Course Intro →</div>
+                      <div className="text-xl sm:text-2xl font-extrabold">Play Course Intro →</div>
                     </div>
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function CourseDetailPage() {
 
               {/* Title */}
               <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-neutral-900 leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-neutral-900 leading-tight">
                   {course.name}
                 </h1>
                 {course.description && (
@@ -264,7 +264,7 @@ export default function CourseDetailPage() {
 
               {/* What You'll Learn */}
               <div className="p-6 sm:p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl sm:rounded-3xl border-2 border-blue-100">
-                <h3 className="text-xl sm:text-2xl font-black text-neutral-900 mb-5 sm:mb-6 flex items-center gap-3">
+                <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-5 sm:mb-6 flex items-center gap-3">
                   <span className="text-2xl sm:text-3xl" aria-hidden="true">✨</span>
                   Yang Akan Kamu Pelajari
                 </h3>
@@ -295,7 +295,7 @@ export default function CourseDetailPage() {
                 <div className="p-6 sm:p-8 bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 text-white relative overflow-hidden">
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:2rem_2rem]"></div>
                   <div className="relative">
-                    <div className="text-3xl sm:text-4xl lg:text-5xl font-black mb-2">
+                    <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-2">
                       {course.price > 0 ? formatPrice(course.price) : (
                         <span className="text-yellow-300">GRATIS</span>
                       )}
@@ -308,7 +308,7 @@ export default function CourseDetailPage() {
                 <form onSubmit={handlePurchase} className="p-6 sm:p-8 space-y-5 sm:space-y-6">
                   {['customer_name', 'customer_email', 'customer_phone'].map((field) => (
                     <div key={field}>
-                      <label htmlFor={field} className="block text-sm font-black text-neutral-900 mb-2">
+                      <label htmlFor={field} className="block text-sm font-extrabold text-neutral-900 mb-2">
                         {field === 'customer_name' ? '✍️ Nama Lengkap' :
                          field === 'customer_email' ? '📧 Email' :
                          '📱 No. WhatsApp'}
@@ -348,7 +348,7 @@ export default function CourseDetailPage() {
                   <button
                     type="submit"
                     disabled={purchasing}
-                    className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base sm:text-lg font-black rounded-xl sm:rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
+                    className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
                     aria-busy={purchasing}
                   >
                     {purchasing ? (
@@ -376,7 +376,7 @@ export default function CourseDetailPage() {
 
                 {/* What's Included */}
                 <div className="px-6 sm:px-8 pb-6 sm:pb-8 space-y-3 border-t-2 border-neutral-100 pt-6">
-                  <h4 className="text-sm font-black text-neutral-900 mb-4">🎁 Yang Kamu Dapatkan:</h4>
+                  <h4 className="text-sm font-extrabold text-neutral-900 mb-4">🎁 Yang Kamu Dapatkan:</h4>
                   {[
                     { icon: '♾️', text: 'Akses seumur hidup' },
                     { icon: '📺', text: 'Video HD quality' },
