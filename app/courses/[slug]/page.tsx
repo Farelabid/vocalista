@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// app/courses/[slug]/page.tsx - Ultimate Creative Design
+// app/courses/[slug]/page.tsx - Course Detail with Consistent Design
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CourseDetailSkeleton } from '@/components/Skeletons';
@@ -28,10 +29,9 @@ export default function CourseDetailPage() {
   const [course, setCourse] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  
+
   const [formData, setFormData] = useState<FormData>({
     customer_name: '',
     customer_email: '',
@@ -39,11 +39,29 @@ export default function CourseDetailPage() {
   });
 
   useEffect(() => {
-    if (variantId) {
-      fetchCourseDetail();
-    } else {
-      setLoading(false);
-    }
+    const fetchCourseDetail = async () => {
+      if (!variantId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/courses?id=${variantId}`);
+
+        if (!res.ok) throw new Error('Course not found');
+
+        const data = await res.json();
+        setCourse(data);
+      } catch (error) {
+        console.error('Error fetching course:', error);
+        toast.error('Gagal memuat detail course. Silakan refresh halaman.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourseDetail();
   }, [variantId]);
 
   useEffect(() => {
@@ -59,23 +77,6 @@ export default function CourseDetailPage() {
       });
     }
   }, []);
-
-  const fetchCourseDetail = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`/api/courses?id=${variantId}`);
-      
-      if (!res.ok) throw new Error('Course not found');
-      
-      const data = await res.json();
-      setCourse(data);
-    } catch (error) {
-      console.error('Error fetching course:', error);
-      toast.error('Gagal memuat detail course. Silakan refresh halaman.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const validateEmail = (email: string): string | undefined => {
     if (!email) return 'Email wajib diisi';
@@ -193,14 +194,14 @@ export default function CourseDetailPage() {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50 flex items-center justify-center p-4 sm:p-6">
         <div className="text-center space-y-6 animate-scale-in max-w-md">
-          <div className="text-8xl mb-4">😕</div>
-          <h2 className="text-4xl font-black text-neutral-900 mb-3">Course Tidak Ditemukan</h2>
-          <p className="text-lg text-neutral-600">Course yang kamu cari tidak tersedia.</p>
-          <Link 
-            href="/courses" 
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-black rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl transition-all hover:scale-105"
+          <div className="text-6xl sm:text-8xl mb-4" aria-hidden="true">😕</div>
+          <h2 className="text-3xl sm:text-4xl font-black text-neutral-900 mb-3">Course Tidak Ditemukan</h2>
+          <p className="text-base sm:text-lg text-neutral-600">Course yang kamu cari tidak tersedia.</p>
+          <Link
+            href="/courses"
+            className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-black rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl transition-all hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -214,44 +215,18 @@ export default function CourseDetailPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-neutral-200/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                  </svg>
-                </div>
-              </div>
-              <span className="hidden sm:block text-xl font-bold bg-gradient-to-r from-neutral-900 to-neutral-700 bg-clip-text text-transparent">Radio Online Academy</span>
-            </Link>
-
-            <Link 
-              href="/courses"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-all"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="hidden sm:inline">Kembali</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      {/* Navigation - Unified Component */}
+      <Navigation currentPage="course-detail" />
 
       {/* Main Content */}
-      <main className="py-12 sm:py-16">
+      <main className="pt-24 sm:pt-32 pb-12 sm:pb-16">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-5 gap-12 items-start">
+          <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
             {/* Left - Course Info (3 columns) */}
-            <div className="lg:col-span-3 space-y-10 animate-slide-right">
+            <div className="lg:col-span-3 space-y-8 sm:space-y-10">
               {/* Course Image */}
               {course.image_url && (
-                <div className="relative aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl group">
+                <div className="relative aspect-video rounded-2xl sm:rounded-3xl overflow-hidden border-2 sm:border-4 border-white shadow-2xl group">
                   <Image
                     src={course.image_url}
                     alt={course.name}
@@ -260,10 +235,10 @@ export default function CourseDetailPage() {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6 sm:p-8">
                     <div className="text-white">
                       <div className="text-xs font-bold uppercase tracking-wider mb-2">Preview</div>
-                      <div className="text-2xl font-black">Play Course Intro →</div>
+                      <div className="text-xl sm:text-2xl font-black">Play Course Intro →</div>
                     </div>
                   </div>
                 </div>
@@ -271,23 +246,23 @@ export default function CourseDetailPage() {
 
               {/* Title */}
               <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-neutral-900 leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-neutral-900 leading-tight">
                   {course.name}
                 </h1>
                 {course.description && (
-                  <p className="text-xl text-neutral-600 leading-relaxed">
+                  <p className="text-base sm:text-lg lg:text-xl text-neutral-600 leading-relaxed">
                     {course.description}
                   </p>
                 )}
               </div>
 
               {/* What You'll Learn */}
-              <div className="p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl border-2 border-blue-100">
-                <h3 className="text-2xl font-black text-neutral-900 mb-6 flex items-center gap-3">
-                  <span className="text-3xl">✨</span>
+              <div className="p-6 sm:p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl sm:rounded-3xl border-2 border-blue-100">
+                <h3 className="text-xl sm:text-2xl font-black text-neutral-900 mb-5 sm:mb-6 flex items-center gap-3">
+                  <span className="text-2xl sm:text-3xl" aria-hidden="true">✨</span>
                   Yang Akan Kamu Pelajari
                 </h3>
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                   {[
                     'Setup server streaming radio',
                     'Konfigurasi Icecast/Shoutcast',
@@ -296,11 +271,11 @@ export default function CourseDetailPage() {
                     'Integrasi web player',
                     'Strategi monetisasi'
                   ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-white rounded-xl">
-                      <svg className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div key={i} className="flex items-start gap-3 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span className="text-sm font-bold text-neutral-700">{item}</span>
+                      <span className="text-sm sm:text-base font-bold text-neutral-700">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -308,38 +283,39 @@ export default function CourseDetailPage() {
             </div>
 
             {/* Right - Purchase Card (2 columns) */}
-            <div className="lg:col-span-2 animate-slide-up stagger-1">
-              <div className="sticky top-24 bg-white rounded-3xl border-4 border-white shadow-2xl overflow-hidden">
+            <div className="lg:col-span-2">
+              <div className="sticky top-24 bg-white rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-white shadow-2xl overflow-hidden">
                 {/* Price Header */}
-                <div className="p-8 bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 text-white relative overflow-hidden">
+                <div className="p-6 sm:p-8 bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 text-white relative overflow-hidden">
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:2rem_2rem]"></div>
                   <div className="relative">
-                    <div className="text-4xl lg:text-5xl font-black mb-2">
+                    <div className="text-3xl sm:text-4xl lg:text-5xl font-black mb-2">
                       {course.price > 0 ? formatPrice(course.price) : (
                         <span className="text-yellow-300">GRATIS</span>
                       )}
                     </div>
-                    <p className="text-blue-100 font-semibold">Investasi terbaik untuk skill radio online</p>
+                    <p className="text-sm sm:text-base text-blue-100 font-semibold">Investasi terbaik untuk skill radio online</p>
                   </div>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handlePurchase} className="p-8 space-y-6">
+                <form onSubmit={handlePurchase} className="p-6 sm:p-8 space-y-5 sm:space-y-6">
                   {['customer_name', 'customer_email', 'customer_phone'].map((field) => (
                     <div key={field}>
-                      <label className="block text-sm font-black text-neutral-900 mb-2">
-                        {field === 'customer_name' ? '✍️ Nama Lengkap' : 
-                         field === 'customer_email' ? '📧 Email' : 
+                      <label htmlFor={field} className="block text-sm font-black text-neutral-900 mb-2">
+                        {field === 'customer_name' ? '✍️ Nama Lengkap' :
+                         field === 'customer_email' ? '📧 Email' :
                          '📱 No. WhatsApp'}
                       </label>
                       <input
+                        id={field}
                         type={field === 'customer_email' ? 'email' : field === 'customer_phone' ? 'tel' : 'text'}
                         name={field}
                         required
                         value={formData[field as keyof FormData]}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        className={`w-full px-5 py-4 bg-neutral-50 text-neutral-900 rounded-2xl border-2 transition-all outline-none font-semibold ${
+                        className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-neutral-50 text-neutral-900 rounded-xl sm:rounded-2xl border-2 transition-all outline-none font-semibold text-sm sm:text-base ${
                           errors[field as keyof FormData] && touched[field]
                             ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/20'
                             : 'border-neutral-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20'
@@ -349,9 +325,11 @@ export default function CourseDetailPage() {
                           field === 'customer_email' ? 'john@example.com' :
                           '08123456789'
                         }
+                        aria-invalid={errors[field as keyof FormData] && touched[field] ? 'true' : 'false'}
+                        aria-describedby={errors[field as keyof FormData] && touched[field] ? `${field}-error` : undefined}
                       />
                       {errors[field as keyof FormData] && touched[field] && (
-                        <p className="error-message mt-2">
+                        <p id={`${field}-error`} className="mt-2 text-sm font-bold text-red-600 flex items-center gap-2">
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                           </svg>
@@ -364,11 +342,15 @@ export default function CourseDetailPage() {
                   <button
                     type="submit"
                     disabled={purchasing}
-                    className="w-full py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-black rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
+                    className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base sm:text-lg font-black rounded-xl sm:rounded-2xl hover:from-blue-700 hover:to-purple-700 shadow-2xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2"
+                    aria-busy={purchasing}
                   >
                     {purchasing ? (
                       <span className="flex items-center justify-center gap-3">
-                        <div className="spinner border-white"></div>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                         Memproses...
                       </span>
                     ) : (
@@ -387,7 +369,7 @@ export default function CourseDetailPage() {
                 </form>
 
                 {/* What's Included */}
-                <div className="px-8 pb-8 space-y-3 border-t-2 border-neutral-100 pt-6">
+                <div className="px-6 sm:px-8 pb-6 sm:pb-8 space-y-3 border-t-2 border-neutral-100 pt-6">
                   <h4 className="text-sm font-black text-neutral-900 mb-4">🎁 Yang Kamu Dapatkan:</h4>
                   {[
                     { icon: '♾️', text: 'Akses seumur hidup' },
@@ -397,8 +379,8 @@ export default function CourseDetailPage() {
                     { icon: '💬', text: 'Community group' },
                     { icon: '🔄', text: 'Update gratis' }
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm font-semibold text-neutral-700 p-2 hover:bg-neutral-50 rounded-xl transition-colors">
-                      <span className="text-2xl">{item.icon}</span>
+                    <div key={i} className="flex items-center gap-3 text-sm sm:text-base font-semibold text-neutral-700 p-2 hover:bg-neutral-50 rounded-xl transition-colors">
+                      <span className="text-xl sm:text-2xl" aria-hidden="true">{item.icon}</span>
                       <span>{item.text}</span>
                     </div>
                   ))}
