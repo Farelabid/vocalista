@@ -15,13 +15,13 @@ if (typeof window !== 'undefined') {
  */
 export function useFadeInUp(options = {}) {
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<ScrollTrigger | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-
     const element = ref.current;
-    
-    gsap.from(element, {
+    if (!element) return;
+
+    const animation = gsap.from(element, {
       y: 60,
       opacity: 0,
       duration: 0.8,
@@ -34,12 +34,17 @@ export function useFadeInUp(options = {}) {
       ...options,
     });
 
+    // Store trigger reference for efficient cleanup
+    triggerRef.current = animation.scrollTrigger || null;
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.trigger === element) trigger.kill();
-      });
+      if (triggerRef.current) {
+        triggerRef.current.kill();
+        triggerRef.current = null;
+      }
+      animation.kill();
     };
-  }, [options]);
+  }, []); // Empty dependency - animation runs once
 
   return ref;
 }
@@ -49,14 +54,13 @@ export function useFadeInUp(options = {}) {
  */
 export function useStaggerChildren(options = {}) {
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<ScrollTrigger | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-
     const element = ref.current;
-    const children = element.children;
+    if (!element || !element.children.length) return;
 
-    gsap.from(children, {
+    const animation = gsap.from(element.children, {
       y: 40,
       opacity: 0,
       duration: 0.6,
@@ -70,12 +74,17 @@ export function useStaggerChildren(options = {}) {
       ...options,
     });
 
+    // Store trigger reference for efficient cleanup
+    triggerRef.current = animation.scrollTrigger || null;
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.trigger === element) trigger.kill();
-      });
+      if (triggerRef.current) {
+        triggerRef.current.kill();
+        triggerRef.current = null;
+      }
+      animation.kill();
     };
-  }, [options]);
+  }, []); // Empty dependency - animation runs once
 
   return ref;
 }
@@ -85,14 +94,15 @@ export function useStaggerChildren(options = {}) {
  */
 export function useCounter(target: number, options = {}) {
   const ref = useRef<HTMLSpanElement>(null);
+  const triggerRef = useRef<ScrollTrigger | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-
     const element = ref.current;
+    if (!element) return;
+
     const obj = { value: 0 };
 
-    gsap.to(obj, {
+    const animation = gsap.to(obj, {
       value: target,
       duration: 2,
       ease: 'power2.out',
@@ -102,19 +112,24 @@ export function useCounter(target: number, options = {}) {
         toggleActions: 'play none none none',
       },
       onUpdate: () => {
-        if (element) {
+        if (element && element.isConnected) {
           element.textContent = Math.round(obj.value).toLocaleString();
         }
       },
       ...options,
     });
 
+    // Store trigger reference for efficient cleanup
+    triggerRef.current = animation.scrollTrigger || null;
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.trigger === element) trigger.kill();
-      });
+      if (triggerRef.current) {
+        triggerRef.current.kill();
+        triggerRef.current = null;
+      }
+      animation.kill();
     };
-  }, [target, options]);
+  }, [target]); // Only re-run if target changes
 
   return ref;
 }

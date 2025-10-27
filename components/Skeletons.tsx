@@ -88,10 +88,59 @@ export function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
 
   return (
     <div className="flex items-center justify-center">
-      <div className={`${sizeClasses[size]} border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin`} 
+      <div className={`${sizeClasses[size]} border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin`}
            role="status"
            aria-label="Loading">
         <span className="sr-only">Loading...</span>
+      </div>
+    </div>
+  );
+}
+
+// Course Detail Page Skeleton
+export function CourseDetailSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left Column - Image */}
+          <div className="space-y-6">
+            <Skeleton className="w-full aspect-video rounded-2xl" shimmer />
+          </div>
+
+          {/* Right Column - Content */}
+          <div className="space-y-6">
+            <Skeleton className="h-10 w-3/4" shimmer />
+            <Skeleton className="h-6 w-1/2" shimmer />
+
+            <div className="space-y-3">
+              <Skeleton className="h-5 w-full" shimmer />
+              <Skeleton className="h-5 w-full" shimmer />
+              <Skeleton className="h-5 w-4/5" shimmer />
+            </div>
+
+            <div className="border-t border-neutral-200 pt-6 space-y-4">
+              <Skeleton className="h-14 w-full rounded-xl" shimmer />
+              <Skeleton className="h-12 w-full rounded-xl" shimmer />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 pt-4">
+              <Skeleton className="h-20 rounded-xl" shimmer />
+              <Skeleton className="h-20 rounded-xl" shimmer />
+              <Skeleton className="h-20 rounded-xl" shimmer />
+            </div>
+          </div>
+        </div>
+
+        {/* Course Content */}
+        <div className="mt-16 space-y-8">
+          <Skeleton className="h-8 w-64" shimmer />
+          <div className="space-y-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full rounded-xl" shimmer />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

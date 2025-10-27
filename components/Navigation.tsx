@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { throttle } from '@/lib/utils';
 
 interface NavigationProps {
   currentPage?: 'home' | 'courses' | 'course-detail';
@@ -14,10 +15,12 @@ export default function Navigation({ currentPage = 'home' }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    // Throttle scroll event untuk performance
+    const handleScroll = throttle(() => {
       setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
+    }, 100);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

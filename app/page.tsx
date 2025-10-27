@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { throttle } from '@/lib/utils';
 
-// Register GSAP plugins
+// Register ScrollTrigger plugin (safe to call multiple times)
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
@@ -19,34 +20,45 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    // Navbar scroll effect
-    const handleScroll = () => {
+    // Navbar scroll effect - throttled untuk performance
+    const handleScroll = throttle(() => {
       setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
+    }, 100);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Hero animations - stagger fade in
-    if (heroRef.current) {
-      const heroElements = heroRef.current.querySelectorAll('.hero-animate');
-      gsap.from(heroElements, {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power3.out',
-        delay: 0.2,
-      });
+    const heroElement = heroRef.current;
+    if (heroElement) {
+      const heroElements = heroElement.querySelectorAll('.hero-animate');
+      if (heroElements.length > 0) {
+        gsap.from(heroElements, {
+          y: 60,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.15,
+          ease: 'power3.out',
+          delay: 0.2,
+        });
+      }
     }
 
-    // Stats animated numbers
-    if (statsRef.current) {
-      const stats = statsRef.current.querySelectorAll('.stat-number');
-      
+    // Stats animated numbers with pre-parsed format
+    const statsElement = statsRef.current;
+    if (statsElement) {
+      const stats = statsElement.querySelectorAll('.stat-number');
+
       stats.forEach((stat) => {
         const target = stat.textContent || '0';
         const numericValue = parseInt(target.replace(/[^0-9]/g, ''));
-        
-        if (!isNaN(numericValue)) {
+
+        if (!isNaN(numericValue) && numericValue > 0) {
+          // Pre-parse format untuk efisiensi
+          const hasPlus = target.includes('+');
+          const hasSlash = target.includes('/');
+          const isFixed = target === '24/7';
+          const isRating = target.includes('4.9');
+
           gsap.from(stat, {
             textContent: 0,
             duration: 2,
@@ -58,17 +70,22 @@ export default function HomePage() {
               toggleActions: 'play none none none',
             },
             onUpdate: function() {
-              const current = Math.round(Number(this.targets()[0].textContent));
-              const formattedNumber = current.toLocaleString();
-              
-              if (target.includes('+')) {
-                (this.targets()[0] as HTMLElement).textContent = formattedNumber + '+';
-              } else if (target.includes('/')) {
-                (this.targets()[0] as HTMLElement).textContent = current.toFixed(1) + '/5';
-              } else if (target.includes('24/7')) {
-                (this.targets()[0] as HTMLElement).textContent = '24/7';
+              const element = this.targets()[0] as HTMLElement;
+              if (!element || !element.isConnected) return;
+
+              const current = Math.round(Number(element.textContent));
+
+              // Format berdasarkan pre-parsed flags
+              if (isFixed) {
+                element.textContent = '24/7';
+              } else if (isRating) {
+                element.textContent = (current / 10).toFixed(1) + '/5';
+              } else if (hasSlash) {
+                element.textContent = current.toFixed(1) + '/5';
+              } else if (hasPlus) {
+                element.textContent = current.toLocaleString() + '+';
               } else {
-                (this.targets()[0] as HTMLElement).textContent = formattedNumber;
+                element.textContent = current.toLocaleString();
               }
             },
           });
@@ -77,37 +94,42 @@ export default function HomePage() {
     }
 
     // Features stagger animation
-    if (featuresRef.current) {
-      const featureCards = featuresRef.current.querySelectorAll('.feature-card');
-      
-      gsap.from(featureCards, {
-        y: 60,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: featuresRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none none',
-        },
-      });
+    const featuresElement = featuresRef.current;
+    if (featuresElement) {
+      const featureCards = featuresElement.querySelectorAll('.feature-card');
+
+      if (featureCards.length > 0) {
+        gsap.from(featureCards, {
+          y: 60,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: featuresElement,
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
     }
 
-    // Parallax effect for background
-    const parallaxElements = document.querySelectorAll('.parallax-bg');
-    parallaxElements.forEach((el) => {
-      gsap.to(el, {
-        y: -80,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-        },
+    // Parallax effect for background - scoped to section
+    if (heroElement) {
+      const parallaxElements = heroElement.querySelectorAll('.parallax-bg');
+      parallaxElements.forEach((el) => {
+        gsap.to(el, {
+          y: -80,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
       });
-    });
+    }
 
     // Cleanup
     return () => {
