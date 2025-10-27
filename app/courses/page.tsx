@@ -1,5 +1,6 @@
-// app/courses/page.tsx - Creative Redesign
+// app/courses/page.tsx - Courses Listing with Consistent Design
 import CourseCard from '@/components/CourseCard';
+import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 import { Course } from '@/lib/types';
 import { CoursesGridSkeleton } from '@/components/Skeletons';
