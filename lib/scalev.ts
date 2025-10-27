@@ -74,9 +74,14 @@ class ScalevClient {
     }
   }
 
-  // Get all products from store WITH PRICES
   async getProducts(storeId?: string) {
     const targetStoreId = storeId || process.env.SCALEV_STORE_ID;
+    
+    if (!targetStoreId) {
+      throw new Error('SCALEV_STORE_ID is not configured');
+    }
+
+    console.log(`🔍 Fetching products for store: ${targetStoreId}`);
     
     // Try multiple endpoint variations
     const endpoints = [
@@ -92,67 +97,50 @@ class ScalevClient {
         params: {},
         name: `GET /stores/${targetStoreId}/products`
       },
-      {
-        method: 'get',
-        url: '/store/products',
-        params: { store_unique_id: targetStoreId },
-        name: 'GET /store/products?store_unique_id'
-      },
     ];
 
     for (const endpoint of endpoints) {
       try {
         console.log(`🔍 Trying: ${endpoint.name}`);
         
-        const response = await this.client.request<ScalevResponse<PaginatedResponse<any>>>({
+        const response = await this.client.request({
           method: endpoint.method,
           url: endpoint.url,
           params: endpoint.params,
         });
 
-        console.log(`✅ Success with: ${endpoint.name}`);
         const products = response.data.data.results || [];
-        console.log(`📦 Found ${products.length} products`);
+        console.log(`✅ Success! Found ${products.length} products with ${endpoint.name}`);
         
-        // IMPORTANT: List endpoint doesn't return prices
-        // We need to fetch detail for each product to get prices
-        if (products.length > 0) {
-          console.log('💰 Fetching detailed product info to get prices...');
-          
-          const detailedProducts = await Promise.all(
-            products.map(async (product: any) => {
-              try {
-                // Fetch product detail which includes prices
-                const detailResponse = await this.client.get<ScalevResponse<any>>(
-                  `/products/${product.id}`
-                );
-                
-                console.log(`✅ Got prices for: ${product.name}`);
-                return detailResponse.data.data;
-              } catch (error) {
-                console.error(`❌ Failed to get detail for product ${product.id}`);
-                // Return original product without prices
-                return product;
-              }
-            })
-          );
-          
-          return detailedProducts;
+        if (products.length === 0) {
+          console.warn('⚠️ No products found. Please add products in Scalev dashboard.');
+          return [];
         }
+
+        // Fetch detailed info for prices
+        console.log('💰 Fetching product details for prices...');
+        const detailedProducts = await Promise.all(
+          products.map(async (product: any) => {
+            try {
+              const detailResponse = await this.client.get(
+                `/products/${product.id}`
+              );
+              return detailResponse.data.data;
+            } catch (error) {
+              console.error(`❌ Failed to get detail for product ${product.id}`);
+              return product;
+            }
+          })
+        );
         
-        return products;
+        return detailedProducts;
       } catch (error: any) {
-        console.log(`❌ Failed: ${endpoint.name}`);
-        console.log(`   Status: ${error.response?.status}`);
-        console.log(`   Error: ${error.response?.data?.error || error.message}`);
-        
-        // Continue to next endpoint
+        console.log(`❌ Failed: ${endpoint.name} - ${error.response?.status || error.message}`);
         continue;
       }
     }
 
-    // If all attempts failed
-    throw new Error('All product endpoint attempts failed. Check Scalev documentation for correct endpoint.');
+    throw new Error('All product endpoints failed. Check Scalev API documentation.');
   }
 
   // Get single product by ID or variant ID

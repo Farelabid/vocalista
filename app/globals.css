@@ -387,22 +387,6 @@ nav {
   animation: slideInFromTop 0.3s ease-out;
 }
 
-/* Navbar Underline Effect */
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-accent);
-  transition: width 0.3s ease;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
 /* ============================================
    CARDS - Premium Style
    ============================================ */
@@ -648,4 +632,37 @@ img {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--color-neutral-400);
+}
+
+/* ============================================
+   ANIMASI MOBILE MENU
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
 }

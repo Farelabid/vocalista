@@ -135,8 +135,14 @@ export default function CourseDetailPage() {
 
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!validateForm()) {
       toast.error('Mohon lengkapi form dengan benar');
+      // Scroll to first error
+      const firstError = document.querySelector('[aria-invalid="true"]');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 

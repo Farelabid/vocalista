@@ -14,9 +14,14 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  // Initialize client-side only
+// Initialize client-side only
   useEffect(() => {
     setIsClient(true);
+    
+    // Set document title
+    if (typeof document !== 'undefined') {
+      document.title = 'Radio Online Academy - Belajar Membangun Radio Online';
+    }
   }, []);
 
   useEffect(() => {

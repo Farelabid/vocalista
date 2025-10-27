@@ -55,27 +55,30 @@ export async function GET(request: Request) {
       return NextResponse.json(course);
     }
 
-    // Get all courses
+// Get all courses
     const products = await scalevClient.getProducts();
     
-    // Transform products to courses
-    // transformProductToCourse now returns array, so we need to flatten
+    // Transform products to courses - handle empty results
+    if (!products || products.length === 0) {
+      console.log('⚠️ No products found from Scalev');
+      return NextResponse.json([]);
+    }
+
     const courses = products
       .map(transformProductToCourse)
-      .flat(); // Flatten array of arrays
+      .flat()
+      .filter(course => course && course.variant_unique_id); // Filter out invalid courses
 
+    console.log(`✅ Transformed ${courses.length} courses`);
+    
     // Sort by price (optional)
     courses.sort((a, b) => a.price - b.price);
 
     return NextResponse.json(courses);
-  } catch (error: any) {
-    console.error('Courses API error:', error);
-    
+  } catch (error) {
+    console.error('Error fetching courses from Scalev:', error);
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch courses',
-        message: error.message,
-      },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

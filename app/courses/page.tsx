@@ -15,10 +15,12 @@ async function getCourses(): Promise<Course[]> {
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch courses: ${res.status}`);
+      console.error(`Failed to fetch courses: ${res.status}`);
+      return [];
     }
 
-    return res.json();
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error fetching courses:', error);
     return [];
@@ -46,17 +48,17 @@ export default async function CoursesPage() {
           <div className="max-w-4xl space-y-6 sm:space-y-8 text-center lg:text-left">
             {/* Breadcrumb - Accessible */}
             <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm font-semibold text-neutral-600 justify-center lg:justify-start">
-              <Link
-                href="/"
-                className="hover:text-neutral-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-              >
-                Home
-              </Link>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-              <span className="text-neutral-900 font-black">Courses</span>
-            </nav>
+  <Link
+    href="/"
+    className="hover:text-neutral-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-1"
+  >
+    Home
+  </Link>
+  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+  </svg>
+  <span className="text-neutral-900 font-black">Courses</span>
+</nav>
 
             {/* Title - Responsive Typography */}
             <div className="space-y-4 sm:space-y-6">
