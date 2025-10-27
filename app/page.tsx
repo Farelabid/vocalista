@@ -1,4 +1,4 @@
-// app/page.tsx - Mobile-First Landing Page dengan GSAP Animations
+// app/page.tsx - Mobile-First Landing Page dengan GSAP Animations (FIXED)
 'use client';
 
 import Link from 'next/link';
@@ -6,120 +6,157 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
   const statsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Initialize client-side only
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
+    if (!isClient) return;
+
+    // Register GSAP plugins once on client
+    gsap.registerPlugin(ScrollTrigger);
+
     // Navbar scroll effect
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
 
-    // Hero animations - stagger fade in
-    if (heroRef.current) {
-      const heroElements = heroRef.current.querySelectorAll('.hero-animate');
-      gsap.from(heroElements, {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power3.out',
-        delay: 0.2,
-      });
-    }
-
-    // Stats animated numbers
-    if (statsRef.current) {
-      const stats = statsRef.current.querySelectorAll('.stat-number');
-      
-      stats.forEach((stat) => {
-        const target = stat.textContent || '0';
-        const numericValue = parseInt(target.replace(/[^0-9]/g, ''));
-        
-        if (!isNaN(numericValue)) {
-          gsap.from(stat, {
-            textContent: 0,
-            duration: 2,
-            ease: 'power2.out',
-            snap: { textContent: 1 },
-            scrollTrigger: {
-              trigger: stat,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-            onUpdate: function() {
-              const current = Math.round(Number(this.targets()[0].textContent));
-              const formattedNumber = current.toLocaleString();
-              
-              if (target.includes('+')) {
-                (this.targets()[0] as HTMLElement).textContent = formattedNumber + '+';
-              } else if (target.includes('/')) {
-                (this.targets()[0] as HTMLElement).textContent = current.toFixed(1) + '/5';
-              } else if (target.includes('24/7')) {
-                (this.targets()[0] as HTMLElement).textContent = '24/7';
-              } else {
-                (this.targets()[0] as HTMLElement).textContent = formattedNumber;
-              }
-            },
+    // Small delay to ensure DOM is fully ready
+    const timer = setTimeout(() => {
+      // Hero animations - stagger fade in
+      if (heroRef.current) {
+        const heroElements = heroRef.current.querySelectorAll('.hero-animate');
+        if (heroElements.length > 0) {
+          gsap.from(heroElements, {
+            y: 60,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            delay: 0.2,
+            clearProps: 'all', // Clear inline styles after animation
           });
         }
-      });
-    }
+      }
 
-    // Features stagger animation
-    if (featuresRef.current) {
-      const featureCards = featuresRef.current.querySelectorAll('.feature-card');
-      
-      gsap.from(featureCards, {
-        y: 60,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: featuresRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none none',
-        },
-      });
-    }
+      // Stats animated numbers
+      if (statsRef.current) {
+        const stats = statsRef.current.querySelectorAll('.stat-number');
+        
+        stats.forEach((stat) => {
+          const target = stat.textContent || '0';
+          const numericValue = parseInt(target.replace(/[^0-9]/g, ''));
+          
+          if (!isNaN(numericValue) && numericValue > 0) {
+            gsap.from(stat, {
+              textContent: 0,
+              duration: 2,
+              ease: 'power2.out',
+              snap: { textContent: 1 },
+              scrollTrigger: {
+                trigger: stat,
+                start: 'top 80%',
+                toggleActions: 'play none none none',
+                once: true, // Only animate once
+              },
+              onUpdate: function() {
+                const current = Math.round(Number(this.targets()[0].textContent));
+                const formattedNumber = current.toLocaleString();
+                
+                if (target.includes('+')) {
+                  (this.targets()[0] as HTMLElement).textContent = formattedNumber + '+';
+                } else if (target.includes('/')) {
+                  (this.targets()[0] as HTMLElement).textContent = current.toFixed(1) + '/5';
+                } else if (target.includes('24/7')) {
+                  (this.targets()[0] as HTMLElement).textContent = '24/7';
+                } else {
+                  (this.targets()[0] as HTMLElement).textContent = formattedNumber;
+                }
+              },
+            });
+          }
+        });
+      }
 
-    // Parallax effect for background
-    const parallaxElements = document.querySelectorAll('.parallax-bg');
-    parallaxElements.forEach((el) => {
-      gsap.to(el, {
-        y: -80,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-        },
-      });
-    });
+      // Features stagger animation
+      if (featuresRef.current) {
+        const featureCards = featuresRef.current.querySelectorAll('.feature-card');
+        
+        if (featureCards.length > 0) {
+          gsap.from(featureCards, {
+            y: 60,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: featuresRef.current,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+              once: true, // Only animate once
+            },
+            clearProps: 'all',
+          });
+        }
+      }
 
-    // Cleanup
+      // Parallax effect for background
+      const parallaxElements = document.querySelectorAll('.parallax-bg');
+      parallaxElements.forEach((el) => {
+        gsap.to(el, {
+          y: -80,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+      });
+
+      // Refresh ScrollTrigger after setup
+      ScrollTrigger.refresh();
+    }, 100);
+
+    // Cleanup function
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
+      // Kill all ScrollTriggers
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, []);
+  }, [isClient]);
 
   // Close mobile menu on route change
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
   };
+
+  // Don't render GSAP animations on server
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50">
+        {/* Simple loading state or minimal content */}
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-neutral-600 font-semibold">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50">
@@ -363,14 +400,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {[
-              { number: '1200+', label: 'Students' },
-              { number: '500+', label: 'Active Radios' },
-              { number: '4.9/5', label: 'Rating' },
-              { number: '24/7', label: 'Support' },
+              { number: '1200', label: 'Students', suffix: '+' },
+              { number: '500', label: 'Active Radios', suffix: '+' },
+              { number: '4.9', label: 'Rating', suffix: '/5' },
+              { number: '24/7', label: 'Support', suffix: '' },
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <div className="stat-number text-3xl sm:text-4xl font-bold text-neutral-900 mb-2">
-                  {stat.number}
+                  {stat.number}{stat.suffix}
                 </div>
                 <div className="text-sm text-neutral-600">{stat.label}</div>
               </div>

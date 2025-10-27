@@ -1,7 +1,7 @@
-// app/layout.tsx - Fixed with ToastProvider
+// app/layout.tsx - Fixed dengan ToastContainer yang benar
 import type { Metadata } from "next";
 import "./globals.css";
-import { ToastProvider } from "@/components/Toast";
+import { ToastContainer } from "@/components/SimpleToast";
 
 export const metadata: Metadata = {
   title: "Radio Online Academy - Belajar Membangun Radio Online Profesional",
@@ -27,9 +27,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased">
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        {children}
+        <ToastContainer />
       </body>
     </html>
   );

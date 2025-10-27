@@ -1,4 +1,4 @@
-// components/Skeleton.tsx - Enhanced with shimmer
+// components/Skeleton.tsx - Enhanced with shimmer (FIXED)
 import React from 'react';
 
 interface SkeletonProps {
@@ -21,7 +21,7 @@ export function Skeleton({
   return (
     <div
       className={`bg-neutral-200 dark:bg-neutral-800 rounded-lg ${
-        shimmer ? 'skeleton-shimmer' : 'animate-pulse'
+        shimmer ? 'skeleton' : 'animate-pulse'
       } ${className}`}
       style={style}
       role="status"
@@ -59,6 +59,84 @@ export function CoursesGridSkeleton({ count = 6 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <CourseCardSkeleton key={i} />
       ))}
+    </div>
+  );
+}
+
+// Course Detail Skeleton - TAMBAHAN YANG HILANG
+export function CourseDetailSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50">
+      {/* Navigation Skeleton */}
+      <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-neutral-200/50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <Skeleton className="h-12 w-48" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content Skeleton */}
+      <main className="py-12 sm:py-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-5 gap-12 items-start">
+            {/* Left - Course Info (3 columns) */}
+            <div className="lg:col-span-3 space-y-10">
+              {/* Image Skeleton */}
+              <Skeleton className="aspect-video rounded-3xl" />
+
+              {/* Title Skeleton */}
+              <div className="space-y-4">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-3/4" />
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-6 w-5/6" />
+              </div>
+
+              {/* What You'll Learn Skeleton */}
+              <div className="p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl border-2 border-blue-100">
+                <Skeleton className="h-8 w-64 mb-6" />
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {[1,2,3,4,5,6].map(i => (
+                    <Skeleton key={i} className="h-12" />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right - Purchase Card (2 columns) */}
+            <div className="lg:col-span-2">
+              <div className="sticky top-24 bg-white rounded-3xl border-4 border-white shadow-2xl overflow-hidden">
+                {/* Price Header Skeleton */}
+                <div className="p-8 bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600">
+                  <Skeleton className="h-12 w-48 bg-white/20" />
+                  <Skeleton className="h-5 w-full bg-white/10 mt-2" />
+                </div>
+
+                {/* Form Skeleton */}
+                <div className="p-8 space-y-6">
+                  {[1,2,3].map(i => (
+                    <div key={i}>
+                      <Skeleton className="h-4 w-32 mb-2" />
+                      <Skeleton className="h-14 w-full" />
+                    </div>
+                  ))}
+                  <Skeleton className="h-14 w-full" />
+                </div>
+
+                {/* What's Included Skeleton */}
+                <div className="px-8 pb-8 space-y-3 border-t-2 border-neutral-100 pt-6">
+                  <Skeleton className="h-5 w-48 mb-4" />
+                  {[1,2,3,4,5,6].map(i => (
+                    <Skeleton key={i} className="h-8" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
